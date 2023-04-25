@@ -1,14 +1,21 @@
-import React from "react";
-import logo from "./logo.svg";
+import styled from "styled-components";
 import "./App.css";
-import TodoList from "./routes/TodoList";
+import { AppRouter } from "./routes/Router/AppRouter";
 
 function App() {
   return (
-    <div className="App">
-      <TodoList />
-    </div>
+    <ContainerDiv className="App">
+      <AppRouter />
+    </ContainerDiv>
   );
 }
+
+const ContainerDiv = styled.div`
+  background-image: linear-gradient(
+    to right,
+    rgba(126, 64, 246, 1),
+    rgba(80, 139, 252, 1)
+  );
+`;
 
 export default App;

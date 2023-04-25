@@ -1,5 +1,7 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import Card from "../cards/card";
+import styled from "styled-components";
 
 const TodoList = () => {
   const [todo, setTodo] = useState<any>([]);
@@ -15,14 +17,16 @@ const TodoList = () => {
   }, []);
 
   const listItems = todo.map((item: any) => (
-    <li key={item.index}>{item.name}</li>
+    <Card key={item.index} data={item} />
   ));
 
   return (
-    <div>
+    <StyledDiv>
       <ul>{listItems}</ul>
-    </div>
+    </StyledDiv>
   );
 };
+
+const StyledDiv = styled.div``;
 
 export default TodoList;
