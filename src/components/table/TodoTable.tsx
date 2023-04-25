@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleCheck,
   faTrashCan,
-  faPencil,
+  faPlusCircle,
   faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -25,24 +25,47 @@ const TodoTable = () => {
     });
   };
 
+  const saveTask = (rowData: any) => {
+    axios.post("/api/todo-list", rowData).then((response) => {
+      console.log(response.status);
+      getAllTodos();
+    });
+  };
+
+  const handleFormSubmit = (event: any) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+    const rowData = {
+      teamMember: formData.get("teamMember"),
+      task: formData.get("task"),
+      priority: formData.get("priority"),
+    };
+    saveTask(rowData);
+    console.log("Row submitted:", rowData);
+  };
+
   useEffect(() => {
     getAllTodos();
   }, []);
 
   const listItems = todo.map((item: any) => (
-    <tr>
+    <tr key={item.index}>
       <td>{item.teamMember}</td>
       <td>{item.task}</td>
       <td>
         <p
-          className={item.priority != "HIGH" ? "bg-success" : "bg-danger"}
+          className={
+            item.priority.toUpperCase() != "HIGH" ? "bg-success" : "bg-danger"
+          }
           style={{ borderRadius: "6px" }}
         >
           {item.priority}
         </p>
       </td>
       <td>
-        <FontAwesomeIcon icon={faCheck} style={{ paddingRight: "10px" }} />
+        <button type="button">
+          <FontAwesomeIcon icon={faCheck} style={{ paddingRight: "10px" }} />
+        </button>
         <FontAwesomeIcon
           icon={faTrashCan}
           onClick={() => deleteTask(item.index)}
@@ -55,17 +78,38 @@ const TodoTable = () => {
     <CustomDiv>
       <FontAwesomeIcon icon={faCircleCheck} size="2xl" />
       <TitleDiv>Tasks</TitleDiv>
-      <table className="table table-hover">
-        <thead>
-          <tr>
-            <th scope="col">Team Member</th>
-            <th scope="col">Task</th>
-            <th scope="col">Priority</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody>{listItems}</tbody>
-      </table>
+      <form onSubmit={handleFormSubmit}>
+        <table className="table table-hover">
+          <thead>
+            <tr>
+              <th scope="col">Team Member</th>
+              <th scope="col">Task</th>
+              <th scope="col">Priority</th>
+              <th scope="col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {listItems}
+
+            <tr key={"new"}>
+              <td>
+                <input type="text" name="teamMember" />
+              </td>
+              <td>
+                <input type="text" name="task" />
+              </td>
+              <td>
+                <input type="text" name="priority" />
+              </td>
+              <td>
+                <button type="submit">
+                  <FontAwesomeIcon icon={faPlusCircle} size="xl" />
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </form>
     </CustomDiv>
   );
 };
@@ -88,6 +132,13 @@ const CustomDiv = styled.div`
   .table,
   .table-hover tbody tr:hover {
     color: #ffffff;
+  }
+
+  button {
+    border: none;
+    background-color: transparent;
+    color: #ffffff;
+    outline: none;
   }
 `;
 
