@@ -1,12 +1,10 @@
-import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
-import TodoList from "./routes/TodoList";
+import { AppRouter } from "./routes/Router/AppRouter";
 
 function App() {
   return (
     <div className="App">
-      <TodoList />
+      <AppRouter />
     </div>
   );
 }
