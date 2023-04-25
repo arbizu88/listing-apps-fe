@@ -9,23 +9,37 @@ import {
   faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 
+interface Todo {
+  teamMember: string;
+  task: string;
+  priority: string;
+  index: number;
+  status: string;
+}
+
 const initialState = {
   teamMember: "",
   task: "",
   priority: "",
+  index: 0,
+  status: "",
 };
 
 const TodoTable = () => {
-  const [todo, setTodo] = useState<any>([]);
-  const [form, setForm] = useState<any>(initialState);
+  const [todo, setTodo] = useState<Todo[]>([]);
+  const [form, setForm] = useState<Todo>(initialState);
 
   const getAllTodos = () => {
     axios.get("/api/todo-list").then((response) => {
-      setTodo(response.data);
+      const data = response.data;
+      const filtered = data.filter((item: Todo) => {
+        return !item.status;
+      });
+      setTodo(filtered);
     });
   };
 
-  const deleteTask = (id: Number) => {
+  const deleteTask = (id: number) => {
     axios.delete(`/api/todo-list/${id}`).then((response) => {
       console.log(response.status);
       getAllTodos();
@@ -37,6 +51,19 @@ const TodoTable = () => {
       console.log(response.status);
       getAllTodos();
       setForm(initialState);
+    });
+  };
+
+  const updateTaskStatus = (id: number) => {
+    const data = {
+      ...form,
+      index: id,
+      status: "Completed",
+    };
+
+    axios.put("/api/todo-list", data).then((response) => {
+      console.log(response.status);
+      getAllTodos();
     });
   };
 
@@ -73,14 +100,12 @@ const TodoTable = () => {
         </p>
       </td>
       <td>
-        <button type="button">
+        <button type="button" onClick={() => updateTaskStatus(item.index)}>
           <FontAwesomeIcon icon={faCheck} style={{ paddingRight: "10px" }} />
         </button>
-        <FontAwesomeIcon
-          icon={faTrashCan}
-          onClick={() => deleteTask(item.index)}
-          style={{}}
-        />
+        <button type="button" onClick={() => deleteTask(item.index)}>
+          <FontAwesomeIcon icon={faTrashCan} style={{}} />
+        </button>
       </td>
     </tr>
   ));
