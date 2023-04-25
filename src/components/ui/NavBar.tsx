@@ -40,9 +40,9 @@ const NavBar = () => {
           <NavLink
             style={({ isActive }) => (isActive ? isActiveStyle : defaultStyle)}
             className="nav-item nav-link"
-            to="/about"
+            to="/todo-table"
           >
-            About
+            Summary
           </NavLink>
         </div>
       </div>
