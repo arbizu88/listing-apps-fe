@@ -6,6 +6,7 @@ import {
   faCircleCheck,
   faTrashCan,
   faPencil,
+  faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 
 const TodoTable = () => {
@@ -14,6 +15,13 @@ const TodoTable = () => {
   const getAllTodos = () => {
     axios.get("/api/todo-list").then((response) => {
       setTodo(response.data);
+    });
+  };
+
+  const deleteTask = (id: Number) => {
+    axios.delete(`/api/todo-list/${id}`).then((response) => {
+      console.log(response.status);
+      getAllTodos();
     });
   };
 
@@ -26,13 +34,20 @@ const TodoTable = () => {
       <td>{item.teamMember}</td>
       <td>{item.task}</td>
       <td>
-        <p className={item.priority != "HIGH" ? "bg-success" : "bg-danger"}>
+        <p
+          className={item.priority != "HIGH" ? "bg-success" : "bg-danger"}
+          style={{ borderRadius: "6px" }}
+        >
           {item.priority}
         </p>
       </td>
       <td>
-        <FontAwesomeIcon icon={faPencil} />
-        <FontAwesomeIcon icon={faTrashCan} />
+        <FontAwesomeIcon icon={faCheck} style={{ paddingRight: "10px" }} />
+        <FontAwesomeIcon
+          icon={faTrashCan}
+          onClick={() => deleteTask(item.index)}
+          style={{}}
+        />
       </td>
     </tr>
   ));
