@@ -9,8 +9,15 @@ import {
   faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 
+const initialState = {
+  teamMember: "",
+  task: "",
+  priority: "",
+};
+
 const TodoTable = () => {
   const [todo, setTodo] = useState<any>([]);
+  const [form, setForm] = useState<any>(initialState);
 
   const getAllTodos = () => {
     axios.get("/api/todo-list").then((response) => {
@@ -29,19 +36,22 @@ const TodoTable = () => {
     axios.post("/api/todo-list", rowData).then((response) => {
       console.log(response.status);
       getAllTodos();
+      setForm(initialState);
     });
   };
 
   const handleFormSubmit = (event: any) => {
     event.preventDefault();
-    const formData = new FormData(event.target);
-    const rowData = {
-      teamMember: formData.get("teamMember"),
-      task: formData.get("task"),
-      priority: formData.get("priority"),
-    };
-    saveTask(rowData);
-    console.log("Row submitted:", rowData);
+    saveTask(form);
+    console.log("Row submitted:", form);
+  };
+
+  const handleOnChange = (event: any) => {
+    const { name, value } = event.target;
+    setForm({
+      ...form,
+      [name]: value,
+    });
   };
 
   useEffect(() => {
@@ -93,13 +103,28 @@ const TodoTable = () => {
 
             <tr key={"new"}>
               <td>
-                <input type="text" name="teamMember" />
+                <input
+                  type="text"
+                  name="teamMember"
+                  value={form.teamMember}
+                  onChange={handleOnChange}
+                />
               </td>
               <td>
-                <input type="text" name="task" />
+                <input
+                  type="text"
+                  name="task"
+                  value={form.task}
+                  onChange={handleOnChange}
+                />
               </td>
               <td>
-                <input type="text" name="priority" />
+                <input
+                  type="text"
+                  name="priority"
+                  value={form.priority}
+                  onChange={handleOnChange}
+                />
               </td>
               <td>
                 <button type="submit">
