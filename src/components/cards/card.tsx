@@ -4,9 +4,10 @@ import styled from "styled-components";
 const Card = ({ data }: any) => {
   return (
     <CustomDiv>
-      <p>ID: {data.index}</p>
-      <p>Name: {data.name}</p>
+      <p>Task: {data.name}</p>
       <p>Description: {data.description}</p>
+      <p>Created At: {data.createdDate}</p>
+      <p>Modified At: {data.modifiedDate!}</p>
     </CustomDiv>
   );
 };
